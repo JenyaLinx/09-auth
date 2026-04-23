@@ -1,8 +1,6 @@
 import { api } from './api';
 import { User } from '@/types/user';
 
-// -------- TYPES --------
-
 type RegisterRequest = {
   email: string;
   password: string;
@@ -13,33 +11,37 @@ type LoginRequest = {
   password: string;
 };
 
+type SessionResponse = {
+  success: boolean;
+};
+
 // -------- AUTH --------
 
-export const register = async (data: RegisterRequest) => {
+export const register = async (data: RegisterRequest): Promise<User> => {
   const res = await api.post<User>('/auth/register', data);
   return res.data;
 };
 
-export const login = async (data: LoginRequest) => {
+export const login = async (data: LoginRequest): Promise<User> => {
   const res = await api.post<User>('/auth/login', data);
   return res.data;
 };
 
-export const logout = async () => {
+export const logout = async (): Promise<void> => {
   await api.post('/auth/logout');
 };
 
-export const checkSession = async () => {
-  const res = await api.get<{ success: boolean }>('/auth/session');
+export const checkSession = async (): Promise<boolean> => {
+  const res = await api.get<SessionResponse>('/auth/session');
   return res.data.success;
 };
 
-export const getMe = async () => {
+export const getMe = async (): Promise<User> => {
   const res = await api.get<User>('/auth/me');
   return res.data;
 };
 
-export const updateMe = async (data: { username: string }) => {
+export const updateMe = async (data: { username: string }): Promise<User> => {
   const res = await api.patch<User>('/users/me', data);
   return res.data;
 };
@@ -52,8 +54,14 @@ export const fetchNotes = async (
   tag?: string
 ) => {
   const res = await api.get('/notes', {
-    params: { page, search, tag, perPage: 12 },
+    params: {
+      page,
+      search,
+      tag,
+      perPage: 12,
+    },
   });
+
   return res.data;
 };
 
