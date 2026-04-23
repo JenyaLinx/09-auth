@@ -1,13 +1,13 @@
-import { fetchNoteById } from "@/lib/api/clientApi"
+import NotesClient from "./Notes.client";
+import { fetchNoteById } from "@/lib/api/serverApi";
 import { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }): Promise<Metadata> {
-  const { id } = await params;
-  const note = await fetchNoteById(id);
+  const note = await fetchNoteById(params.id);
 
   return {
     title: note.title,
@@ -15,7 +15,7 @@ export async function generateMetadata({
     openGraph: {
       title: note.title,
       description: note.content,
-      url: `/notes/${id}`,
+      url: `/notes/${params.id}`,
       images: [
         {
           url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
@@ -25,6 +25,10 @@ export async function generateMetadata({
   };
 }
 
-export default function Page() {
-  return null;
+export default function Page({
+  params,
+}: {
+  params: { id: string };
+}) {
+  return <NotesClient id={params.id} />;
 }
