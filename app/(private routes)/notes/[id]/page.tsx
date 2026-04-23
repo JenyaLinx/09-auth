@@ -1,4 +1,4 @@
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from "@/lib/api/clientApi"
 import { Metadata } from "next";
 
 export async function generateMetadata({
