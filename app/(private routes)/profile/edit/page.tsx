@@ -14,7 +14,7 @@ export default function EditProfilePage() {
 
   const [username, setUsername] = useState(user?.username || '');
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const updated = await updateMe({ username });
@@ -30,13 +30,13 @@ export default function EditProfilePage() {
       <div className={css.profileCard}>
         <h1 className={css.formTitle}>Edit Profile</h1>
 
-      <Image
-  src={user?.avatar || 'https://ac.goit.global/fullstack/react/default-avatar.jpg'}
-  alt="User Avatar"
-  width={120}
-  height={120}
-  className={css.avatar}
-/>
+        <Image
+          src={user?.avatar || 'https://via.placeholder.com/120'}
+          alt="User Avatar"
+          width={120}
+          height={120}
+          className={css.avatar}
+        />
 
         <form className={css.profileInfo} onSubmit={handleSave}>
           <div className={css.usernameWrapper}>
@@ -60,7 +60,7 @@ export default function EditProfilePage() {
             <button
               type="button"
               className={css.cancelButton}
-              onClick={() => router.push('/profile')}
+              onClick={() => router.back()}
             >
               Cancel
             </button>

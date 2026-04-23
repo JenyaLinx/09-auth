@@ -1,71 +1,68 @@
 import { cookies } from 'next/headers';
+import { AxiosResponse } from 'axios';
 import { api } from './api';
 import { User } from '@/types/user';
+import { Note } from '@/types/note';
+import { FetchNotesResponse } from './clientApi';
 
-
-
-export const checkSession = async (): Promise<boolean> => {
+export const checkSession = async (): Promise<
+  AxiosResponse<{ success: boolean }>
+> => {
   const cookieStore = await cookies();
 
-  try {
-    const res = await api.get('/auth/session', {
-      headers: {
-        Cookie: cookieStore.toString(),
-      },
-    });
-
-    return res.status === 200;
-  } catch {
-    return false;
-  }
+  return api.get<{ success: boolean }>('/auth/session', {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
+  });
 };
-
-
 
 export const getMe = async (): Promise<User | null> => {
   const cookieStore = await cookies();
 
   try {
-    const { data } = await api.get<User>('/users/me', {
+    const res = await api.get<User>('/users/me', {
       headers: {
         Cookie: cookieStore.toString(),
       },
     });
 
-    return data;
+    return res.data;
   } catch {
     return null;
   }
 };
 
-
-
-export const fetchNotes = async (params?: {
-  page?: number;
-  perPage?: number;
-  search?: string;
-  tag?: string;
-}) => {
+export const fetchNotes = async (
+  page: number,
+  search: string,
+  tag: string
+): Promise<FetchNotesResponse> => {
   const cookieStore = await cookies();
 
-  const { data } = await api.get('/notes', {
-    params,
+  const res = await api.get<FetchNotesResponse>('/notes', {
+    params: {
+      page,
+      search,
+      tag,
+      perPage: 12,
+    },
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
 
-  return data;
+  return res.data;
 };
 
-export const fetchNoteById = async (id: string) => {
+export const fetchNoteById = async (id: string): Promise<Note> => {
   const cookieStore = await cookies();
 
-  const { data } = await api.get(`/notes/${id}`, {
+  const res = await api.get<Note>(`/notes/${id}`, {
     headers: {
       Cookie: cookieStore.toString(),
     },
   });
 
-  return data;
+  return res.data;
 };

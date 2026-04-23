@@ -1,42 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api/clientApi';
-
-type Note = {
-  _id: string;
-  title: string;
-  content: string;
-  tag: string;
-};
 
 type Props = {
   id: string;
 };
 
 export default function NotesClient({ id }: Props) {
-  const [note, setNote] = useState<Note | null>(null);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['note', id],
+    queryFn: () => fetchNoteById(id),
+  });
 
-  useEffect(() => {
-    const loadNote = async () => {
-      try {
-        const data = await fetchNoteById(id);
-        setNote(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadNote();
-  }, [id]);
-
-  if (!note) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError || !data) return <p>Something went wrong.</p>;
 
   return (
     <div>
-      <h1>{note.title}</h1>
-      <p>{note.content}</p>
-      <span>{note.tag}</span>
+      <h1>{data.title}</h1>
+      <p>{data.content}</p>
+      <span>{data.tag}</span>
     </div>
   );
 }

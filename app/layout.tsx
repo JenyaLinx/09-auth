@@ -1,29 +1,29 @@
-import "./globals.css";
-import { ReactNode } from "react";
-import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
-import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
-import AuthProvider from "@/components/AuthProvider/AuthProvider";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
+import './globals.css';
+import { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { Roboto } from 'next/font/google';
+import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
+import AuthProvider from '@/components/AuthProvider/AuthProvider';
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer/Footer';
 
 const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-  variable: "--font-roboto",
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  display: 'swap',
+  variable: '--font-roboto',
 });
 
 export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Manage your notes easily",
+  title: 'NoteHub',
+  description: 'Manage your notes easily',
   openGraph: {
-    title: "NoteHub",
-    description: "Manage your notes easily",
-    url: "/",
+    title: 'NoteHub',
+    description: 'Manage your notes easily',
+    url: '/',
     images: [
       {
-        url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
       },
     ],
   },
@@ -31,8 +31,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: ReactNode;
+  modal: ReactNode;
 }) {
   return (
     <html lang="en">
@@ -41,6 +43,7 @@ export default function RootLayout({
           <AuthProvider>
             <Header />
             {children}
+            {modal}
             <Footer />
           </AuthProvider>
         </TanStackProvider>

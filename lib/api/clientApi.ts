@@ -1,5 +1,6 @@
 import { api } from './api';
 import { User } from '@/types/user';
+import { Note } from '@/types/note';
 
 type RegisterRequest = {
   email: string;
@@ -15,7 +16,10 @@ type SessionResponse = {
   success: boolean;
 };
 
-// -------- AUTH --------
+export interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number;
+}
 
 export const register = async (data: RegisterRequest): Promise<User> => {
   const res = await api.post<User>('/auth/register', data);
@@ -37,7 +41,7 @@ export const checkSession = async (): Promise<boolean> => {
 };
 
 export const getMe = async (): Promise<User> => {
-  const res = await api.get<User>('/auth/me');
+  const res = await api.get<User>('/users/me');
   return res.data;
 };
 
@@ -46,14 +50,12 @@ export const updateMe = async (data: { username: string }): Promise<User> => {
   return res.data;
 };
 
-// -------- NOTES --------
-
 export const fetchNotes = async (
   page: number,
   search: string,
-  tag?: string
-) => {
-  const res = await api.get('/notes', {
+  tag: string
+): Promise<FetchNotesResponse> => {
+  const res = await api.get<FetchNotesResponse>('/notes', {
     params: {
       page,
       search,
@@ -65,8 +67,8 @@ export const fetchNotes = async (
   return res.data;
 };
 
-export const fetchNoteById = async (id: string) => {
-  const res = await api.get(`/notes/${id}`);
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const res = await api.get<Note>(`/notes/${id}`);
   return res.data;
 };
 
@@ -74,12 +76,12 @@ export const createNote = async (data: {
   title: string;
   content: string;
   tag: string;
-}) => {
-  const res = await api.post('/notes', data);
+}): Promise<Note> => {
+  const res = await api.post<Note>('/notes', data);
   return res.data;
 };
 
-export const deleteNote = async (id: string) => {
-  const res = await api.delete(`/notes/${id}`);
+export const deleteNote = async (id: string): Promise<Note> => {
+  const res = await api.delete<Note>(`/notes/${id}`);
   return res.data;
 };
